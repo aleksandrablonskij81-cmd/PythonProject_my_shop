@@ -1,0 +1,24 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<h1 class=mb-4>Наши товары</h1>
+
+<div class=row>
+    {% for product in products %}
+    <div class=col-md-4 mb-4>
+        <div class=card h-100>
+            <div class=card-body>
+                <h5 class=card-title>{{ product.name }}</h5>
+                <p class=card-text>{{ product.description }}</p>
+                <p class=card-text><strong>Цена: {{ product.price }} руб.</strong></p>
+                <a href=# class=btn btn-primary>Купить</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Товаров пока нет</p>
+    {% endfor %}
+</div>
+{% endblock %}
