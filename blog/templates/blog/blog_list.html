@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+    <h1>📝 Блог</h1>
+
+    <div class="blog-list">
+        {% for post in posts %}
+            <div class="blog-card">
+                <h2><a href="{% url 'blog:blog_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+                {% if post.preview %}
+                    <img src="{{ post.preview.url }}" alt="{{ post.title }}" width="300">
+                {% endif %}
+                <p>{{ post.content|truncatechars:200 }}</p>
+                <p><small>👁️ {{ post.views_count }} просмотров | 📅 {{ post.created_at|date:"d.m.Y" }}</small></p>
+            </div>
+        {% empty %}
+            <p>Статей пока нет</p>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">« Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">← Предыдущая</a>
+            {% endif %}
+
+            <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Следующая →</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя »</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <a href="{% url 'blog:blog_create' %}" class="btn">➕ Добавить статью</a>
+{% endblock %}

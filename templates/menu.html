@@ -1,7 +1,9 @@
 <nav class="menu">
     <a href="{% url 'catalog:index' %}">🏠 Главная</a>
     <a href="{% url 'catalog:add_product' %}">➕ Добавить товар</a>
+    <a href="{% url 'blog:blog_list' %}">📝 Блог</a>
     <a href="/admin/">⚙️ Админка</a>
+
     <div class="right">
         {% if user.is_authenticated %}
             👤 {{ user.username }}
