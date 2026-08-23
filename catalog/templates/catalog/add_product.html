@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить товар{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>➕ Добавить новый товар</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: red;">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Сохранить товар</button>
+        </form>
+
+        <a href="{% url 'catalog:index' %}">← Назад</a>
+    </div>
+{% endblock %}
