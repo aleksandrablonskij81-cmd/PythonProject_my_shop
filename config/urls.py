@@ -4,10 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),          # админка
-    path('', include('catalog.urls')),        # все остальные URL идут в приложение catalog
+    path('admin/', admin.site.urls),
+    path('', include('catalog.urls')),
+    path('blogs/', include('blog.urls')),  # ← добавляем блог
 ]
 
-# Для отображения картинок в режиме разработки
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

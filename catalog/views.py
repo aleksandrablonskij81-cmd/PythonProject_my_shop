@@ -1,46 +1,46 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.urls import reverse_lazy
 from .models import Product, Category
 from .forms import ProductForm
 
 
-def index(request):
-    """Главная страница со списком товаров"""
-    products_list = Product.objects.all().order_by('-created_at')
+# 1. Главная страница - ListView
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/index.html'
+    context_object_name = 'products'
+    paginate_by = 6
 
-    # Фильтрация по категории
-    category_id = request.GET.get('category')
-    if category_id:
-        products_list = products_list.filter(category_id=category_id)
+    def get_queryset(self):
+        """Фильтрация по категории"""
+        queryset = Product.objects.all().order_by('-created_at')
+        category_id = self.request.GET.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+        return queryset
 
-    # Пагинация
-    paginator = Paginator(products_list, 6)
-    page_number = request.GET.get('page')
-    products = paginator.get_page(page_number)
-
-    categories = Category.objects.all()
-
-    return render(request, 'catalog/index.html', {
-        'products': products,
-        'categories': categories,
-        'selected_category': category_id
-    })
-
-
-def product_detail(request, pk):
-    """Страница с подробной информацией о товаре"""
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'catalog/product_detail.html', {'product': product})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['selected_category'] = self.request.GET.get('category')
+        return context
 
 
-def add_product(request):
-    """Страница добавления нового товара"""
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('catalog:index')
-    else:
-        form = ProductForm()
+# 2. Страница товара - DetailView
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
-    return render(request, 'catalog/add_product.html', {'form': form})
+
+# 3. Добавление товара - CreateView
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/add_product.html'
+    success_url = reverse_lazy('catalog:index')
+
+
+# 4. Страница контактов - TemplateView (если есть)
+class ContactView(TemplateView):
+    template_name = 'catalog/contacts.html'

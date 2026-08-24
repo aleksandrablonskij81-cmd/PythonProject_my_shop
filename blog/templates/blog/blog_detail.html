@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <div class="blog-detail">
+        <h1>{{ post.title }}</h1>
+        <p><small>📅 {{ post.created_at|date:"d.m.Y H:i" }} | 👁️ {{ post.views_count }} просмотров</small></p>
+
+        {% if post.preview %}
+            <img src="{{ post.preview.url }}" alt="{{ post.title }}" style="max-width: 600px;">
+        {% endif %}
+
+        <div class="content">
+            {{ post.content|linebreaks }}
+        </div>
+
+        <div class="blog-actions">
+            <a href="{% url 'blog:blog_update' pk=post.pk %}" class="btn">✏️ Редактировать</a>
+            <a href="{% url 'blog:blog_delete' pk=post.pk %}" class="btn" style="background: #e74c3c;">🗑️ Удалить</a>
+        </div>
+
+        <a href="{% url 'blog:blog_list' %}" class="btn-back">← Назад к блогу</a>
+    </div>
+{% endblock %}
