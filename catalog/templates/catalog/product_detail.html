@@ -9,11 +9,19 @@
 
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <img src="https://via.placeholder.com/400x300?text=Нет+изображения" alt="No image">
         {% endif %}
 
-        <p class="price">{{ product.price }} ₽</p>
-        <p class="description">{{ product.description|linebreaks }}</p>
+        <div class="price">{{ product.price }} ₽</div>
+        <div class="description">{{ product.description|linebreaks }}</div>
+
         <p style="color: #95a5a6; font-size: 14px;">Добавлен: {{ product.created_at|date:"d.m.Y H:i" }}</p>
+
+        <div class="product-actions">
+            <a href="{% url 'catalog:product_update' pk=product.pk %}" class="btn">✏️ Редактировать</a>
+            <a href="{% url 'catalog:product_delete' pk=product.pk %}" class="btn" style="background: #e74c3c;">🗑️ Удалить</a>
+        </div>
 
         <a href="{% url 'catalog:index' %}" class="btn-back">← Назад к списку</a>
     </div>
