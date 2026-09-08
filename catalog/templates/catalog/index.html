@@ -16,9 +16,14 @@
 
                 <h2>{{ product.name }}</h2>
                 <p class="description">{{ product.description|truncatechars:100 }}</p>
-                <p class="price">{{ product.price }} ₽</p>
+                <div class="price">{{ product.price }} ₽</div>
                 <p style="font-size: 14px; color: #7f8c8d;">📂 {{ product.category.name }}</p>
-                <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="btn">Подробнее</a>
+
+                <div class="product-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+                    <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="btn">Подробнее</a>
+                    <a href="{% url 'catalog:product_update' pk=product.pk %}" class="btn" style="background: #f39c12;">✏️</a>
+                    <a href="{% url 'catalog:product_delete' pk=product.pk %}" class="btn" style="background: #e74c3c;">🗑️</a>
+                </div>
             </div>
         {% empty %}
             <p>Товаров пока нет</p>

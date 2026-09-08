@@ -1,10 +1,10 @@
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from .models import Product, Category
 from .forms import ProductForm
 
 
-# 1. Главная страница - ListView
 class ProductListView(ListView):
     model = Product
     template_name = 'catalog/index.html'
@@ -12,7 +12,6 @@ class ProductListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        """Фильтрация по категории"""
         queryset = Product.objects.all().order_by('-created_at')
         category_id = self.request.GET.get('category')
         if category_id:
@@ -26,14 +25,12 @@ class ProductListView(ListView):
         return context
 
 
-# 2. Страница товара - DetailView
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
 
 
-# 3. Добавление товара - CreateView
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
@@ -41,6 +38,22 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('catalog:index')
 
 
-# 4. Страница контактов - TemplateView (если есть)
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_update.html'
+    context_object_name = 'product'
+
+    def get_success_url(self):
+        return reverse_lazy('catalog:product_detail', kwargs={'pk': self.object.pk})
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    context_object_name = 'product'
+    success_url = reverse_lazy('catalog:index')
+
+
 class ContactView(TemplateView):
     template_name = 'catalog/contacts.html'
