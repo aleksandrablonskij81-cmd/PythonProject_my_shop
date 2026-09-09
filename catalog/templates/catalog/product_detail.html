@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ product.name }}{% endblock %}
-
 {% block content %}
+<div class="container mt-4">
     <div class="product-detail">
         <h1>{{ product.name }}</h1>
-        <p><strong>Категория:</strong> {{ product.category.name }}</p>
 
         {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        {% else %}
-            <img src="https://via.placeholder.com/400x300?text=Нет+изображения" alt="No image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 400px; object-fit: contain;">
         {% endif %}
 
         <div class="price">{{ product.price }} ₽</div>
@@ -23,6 +19,7 @@
             <a href="{% url 'catalog:product_delete' pk=product.pk %}" class="btn" style="background: #e74c3c;">🗑️ Удалить</a>
         </div>
 
-        <a href="{% url 'catalog:index' %}" class="btn-back">← Назад к списку</a>
+        <a href="{% url 'catalog:product_list' %}" class="btn-back">← Назад к списку</a>
     </div>
+</div>
 {% endblock %}

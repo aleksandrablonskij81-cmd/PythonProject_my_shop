@@ -1,59 +1,49 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from .models import Product, Category
-from .forms import ProductForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Product, Category  # импортируйте ваши модели
+from .forms import ProductForm  # если есть форма
 
+# 👇 ЭТА ФУНКЦИЯ ОТВЕЧАЕТ ЗА СПИСОК ТОВАРОВ (ГЛАВНАЯ СТРАНИЦА)
+def product_list(request):
+    products = Product.objects.all()  # получаем все товары
+    return render(request, 'catalog/product_list.html', {'products': products})
 
-class ProductListView(ListView):
-    model = Product
-    template_name = 'catalog/index.html'
-    context_object_name = 'products'
-    paginate_by = 6
+# 👇 ЭТА ФУНКЦИЯ ОТВЕЧАЕТ ЗА ДЕТАЛЬНЫЙ ПРОСМОТР ТОВАРА
+@login_required
+def product_detail(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    return render(request, 'catalog/product_detail.html', {'product': product})
 
-    def get_queryset(self):
-        queryset = Product.objects.all().order_by('-created_at')
-        category_id = self.request.GET.get('category')
-        if category_id:
-            queryset = queryset.filter(category_id=category_id)
-        return queryset
+# 👇 ЭТА ФУНКЦИЯ ОТВЕЧАЕТ ЗА СОЗДАНИЕ ТОВАРА
+@login_required
+def product_create(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('catalog:product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'catalog/product_form.html', {'form': form})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        context['selected_category'] = self.request.GET.get('category')
-        return context
+# 👇 ЭТА ФУНКЦИЯ ОТВЕЧАЕТ ЗА РЕДАКТИРОВАНИЕ ТОВАРА
+@login_required
+def product_update(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('catalog:product_list')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'catalog/product_form.html', {'form': form})
 
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'catalog/product_detail.html'
-    context_object_name = 'product'
-
-
-class ProductCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'catalog/add_product.html'
-    success_url = reverse_lazy('catalog:index')
-
-
-class ProductUpdateView(UpdateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'catalog/product_update.html'
-    context_object_name = 'product'
-
-    def get_success_url(self):
-        return reverse_lazy('catalog:product_detail', kwargs={'pk': self.object.pk})
-
-
-class ProductDeleteView(DeleteView):
-    model = Product
-    template_name = 'catalog/product_confirm_delete.html'
-    context_object_name = 'product'
-    success_url = reverse_lazy('catalog:index')
-
-
-class ContactView(TemplateView):
-    template_name = 'catalog/contacts.html'
+# 👇 ЭТА ФУНКЦИЯ ОТВЕЧАЕТ ЗА УДАЛЕНИЕ ТОВАРА
+@login_required
+def product_delete(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('catalog:product_list')
+    return render(request, 'catalog/product_confirm_delete.html', {'product': product})
