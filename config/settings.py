@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',  # <-- НАШЕ ПРИЛОЖЕНИЕ
-    'blog',  # ← добавляем
+    'blog',
+    'users',# ← добавляем
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Настройки для отправки писем
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@myshop.com'
+
+# URL для редиректов
+LOGIN_URL = '/users/login/'
+
+AUTH_USER_MODEL = 'users.CustomUser'
