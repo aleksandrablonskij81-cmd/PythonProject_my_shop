@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog',  # <-- НАШЕ ПРИЛОЖЕНИЕ
     'blog',
-    'users',# ← добавляем
+    'users',
+    'django_redis',# ← добавляем
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,15 @@ DEFAULT_FROM_EMAIL = 'noreply@myshop.com'
 LOGIN_URL = '/users/login/'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+# ===== НАСТРОЙКИ КЕШИРОВАНИЯ (REDIS) =====
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'my_shop',
+        'TIMEOUT': 300,  # 5 минут по умолчанию
+    }
+}
