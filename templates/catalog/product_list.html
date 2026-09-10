@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Товары</h1>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'catalog:product_create' %}" class="btn btn-success mb-4">➕ Добавить товар</a>
+    {% endif %}
+
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">Нет фото</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted" style="flex-grow: 1;">{{ product.description|truncatewords:15 }}</p>
+                        <p class="card-text"><strong>{{ product.price }} руб.</strong></p>
+                        <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-primary mt-2">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>Товаров пока нет.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

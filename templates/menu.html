@@ -1,0 +1,16 @@
+<nav class="menu">
+    <a href="{% url 'catalog:product_list' %}">🏠 Главная</a>
+    <a href="{% url 'catalog:product_create' %}">➕ Добавить товар</a>
+    <a href="{% url 'blog:blog_list' %}">📝 Блог</a>
+    <a href="/admin/">⚙️ Админка</a>
+
+    <div class="right">
+        {% if user.is_authenticated %}
+            👤 {{ user.username }}
+            <a href="{% url 'users:logout' %}">Выйти</a>
+        {% else %}
+            <a href="{% url 'users:login' %}">Войти</a>
+            <a href="{% url 'users:register' %}">Регистрация</a>
+        {% endif %}
+    </div>
+</nav>

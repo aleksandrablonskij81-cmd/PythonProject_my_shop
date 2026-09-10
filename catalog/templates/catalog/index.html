@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+    <h1>🛍️ Каталог товаров</h1>
+
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Нет+изображения" alt="No image">
+                {% endif %}
+
+                <h2>{{ product.name }}</h2>
+                <p class="description">{{ product.description|truncatechars:100 }}</p>
+                <div class="price">{{ product.price }} ₽</div>
+                <p style="font-size: 14px; color: #7f8c8d;">📂 {{ product.category.name }}</p>
+
+                <div class="product-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+                    <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="btn">Подробнее</a>
+                    <a href="{% url 'catalog:product_update' pk=product.pk %}" class="btn" style="background: #f39c12;">✏️</a>
+                    <a href="{% url 'catalog:product_delete' pk=product.pk %}" class="btn" style="background: #e74c3c;">🗑️</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>Товаров пока нет</p>
+        {% endfor %}
+    </div>
+
+    {% if products.has_other_pages %}
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page=1">« Первая</a>
+            {% endif %}
+
+            <span>Страница {{ products.number }} из {{ products.paginator.num_pages }}</span>
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Следующая →</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Мой магазин{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background-color: #2d2d44;
+            color: #e0e0e0;
+            border: 1px solid #3d3d5c;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .card-title {
+            color: #ffffff;
+        }
+        .card-text {
+            color: #b0b0b0;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            background-color: #16213e !important;
+        }
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        .menu {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #c0c0c0;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .menu a:hover {
+            background-color: #2a3a5c;
+            color: #ffffff;
+        }
+        .right {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn-outline-primary {
+            color: #6ea8fe;
+            border-color: #6ea8fe;
+        }
+        .btn-outline-primary:hover {
+            background-color: #6ea8fe;
+            color: #1a1a2e;
+        }
+        .btn-primary {
+            background-color: #6ea8fe;
+            border-color: #6ea8fe;
+            color: #1a1a2e;
+        }
+        .btn-primary:hover {
+            background-color: #5b8fd4;
+            border-color: #5b8fd4;
+        }
+        .btn-success {
+            background-color: #2d8f5e;
+            border-color: #2d8f5e;
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background-color: #237a4e;
+            border-color: #237a4e;
+        }
+        .btn-outline-danger {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+        .btn-outline-danger:hover {
+            background-color: #ff6b6b;
+            color: #1a1a2e;
+        }
+        .badge.bg-info {
+            background-color: #4a6fa5 !important;
+            color: #ffffff;
+        }
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #2d2d44;
+        }
+        /* Тёмные поля ввода */
+        input, textarea, select {
+            background-color: #2d2d44 !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #3d3d5c !important;
+            border-radius: 5px;
+            padding: 8px 12px;
+            width: 100%;
+        }
+        input:focus, textarea:focus, select:focus {
+            background-color: #3d3d5c !important;
+            color: #ffffff !important;
+            border-color: #6ea8fe !important;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(110, 168, 254, 0.25);
+        }
+        label {
+            color: #b0b0b0;
+        }
+        /* Сообщения */
+        .alert-success {
+            background-color: #1a3a2a;
+            color: #8fbc8f;
+            border-color: #2d5f3a;
+        }
+        .alert-error {
+            background-color: #3a1a1a;
+            color: #ff6b6b;
+            border-color: #5f2d2d;
+        }
+        .alert-info {
+            background-color: #1a2a3a;
+            color: #6ea8fe;
+            border-color: #2d4a5f;
+        }
+        .alert-warning {
+            background-color: #3a2a1a;
+            color: #f0c060;
+            border-color: #5f4a2d;
+        }
+        .alert {
+            border-radius: 5px;
+            padding: 12px 20px;
+        }
+        .btn-close {
+            filter: invert(1);
+        }
+        /* Ссылки */
+        a {
+            color: #6ea8fe;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #8fc8ff;
+            text-decoration: underline;
+        }
+        /* Стили для ошибок в формах */
+        .errorlist {
+            color: #ff6b6b;
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }
+        .errorlist li {
+            background-color: rgba(255, 107, 107, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            border-left: 3px solid #ff6b6b;
+        }
+        /* Карточка товара */
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            background-color: #1a1a2e;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-body .btn {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Меню навигации -->
+        <nav class="navbar navbar-expand-lg navbar-light rounded">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'catalog:product_list' %}">🏠 MyShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: #3d3d5c;">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="menu">
+                        <a href="{% url 'catalog:product_list' %}">🏠 Главная</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'catalog:product_create' %}">➕ Добавить товар</a>
+                        {% endif %}
+                        <a href="{% url 'blog:blog_list' %}">📝 Блог</a>
+                        <a href="/admin/">⚙️ Админка</a>
+
+                        <div class="right">
+                            {% if user.is_authenticated %}
+                                <span class="badge bg-info">👤 {{ user.username }}</span>
+                                <a href="{% url 'users:logout' %}" class="btn btn-outline-danger btn-sm">Выйти</a>
+                            {% else %}
+                                <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-sm">Войти</a>
+                                <a href="{% url 'users:register' %}" class="btn btn-primary btn-sm">Регистрация</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Сообщения (ошибки, успех) -->
+        {% if messages %}
+            <div class="mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Основной контент -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Мой магазин. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS (для мобильного меню) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

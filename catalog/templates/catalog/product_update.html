@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать товар{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>✏️ Редактировать товар</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="help-text">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="error-message">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-submit">Сохранить изменения</button>
+        </form>
+
+        <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="btn-back">← Назад к товару</a>
+    </div>
+{% endblock %}
